@@ -24,17 +24,14 @@ router.get("/alterar", async (req, res) => {
 });
 
 
-// adicionar validação de dados com o express-validator
-// nome - 5 a 45 caracteres
-// prazo data válida e hoje ou no futuro
-// situação - inteiro de 0 a 4 
+
 router.post("/cadastro", tarefasController.validarFormCad,
     async (req, res) => {
         tarefasController.salvarTarefa(req, res);
     });
 
 
-// exclusão lógica (soft delete) - marca status_tarefa = 0
+
 router.get("/excluir", async (req, res) => {
     tarefasController.excluirTarefa(req, res);
 });

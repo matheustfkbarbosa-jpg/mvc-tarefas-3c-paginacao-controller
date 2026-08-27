@@ -26,13 +26,9 @@ const tarefasController = {
 
     listarTarefas: async function (req, res) {
         res.locals.moment = moment;
-        //recuperar a página solicitada caso não exista será a página 1
         let paginaAtual = req.query.pagina == undefined ? 1 : req.query.pagina;
-        //definir a qtde de registros por página
         let qtdePagina = 5;
-        //definir o offset em relação a pagina atual
         let offset = (paginaAtual - 1) * qtdePagina;
-        //definir o número de páginas de resultados
         let totalPaginas = Math.ceil(await tarefasModel.totRegistros() / qtdePagina);
 
         if (totalPaginas > 1) {
@@ -64,14 +60,14 @@ const tarefasController = {
   
     exibirAlteracao: async function (req, res) {
         res.locals.moment = moment;
-        //recuperar o id da queryString
+    
         const id = req.query.id;
 
         try {
             const tarefa = await tarefasModel.findById(id);
 
             if (!tarefa || tarefa.length == 0) {
-                //id não encontrado (ou já excluído) -> volta para a listagem
+        
                 res.redirect("/");
                 return;
             }
@@ -88,14 +84,12 @@ const tarefasController = {
     },
 
 
-    // trata o post do form de cadastro/alteração, faz a validação
-    // e decide entre inclusão (create) ou alteração (update)
     salvarTarefa: async function (req, res) {
         res.locals.moment = moment;
         let listaErros = validationResult(req);
 
         if (listaErros.isEmpty()) {
-            // vazio == sem erros
+ 
             const objJson = {
                 id: req.body.id,
                 nome: req.body.tarefa,
@@ -105,10 +99,10 @@ const tarefasController = {
 
             try {
                 if (objJson.id == 0) {
-                    // sem id -> inclusão
+                  
                     var result = await tarefasModel.create(objJson);
                 } else {
-                    // com id -> alteração
+                 
                     var result = await tarefasModel.update(objJson);
                 }
                 res.redirect("/");
@@ -117,7 +111,7 @@ const tarefasController = {
                 res.redirect("/");
             }
         } else {
-            // há erros de validação -> volta para o form mostrando as mensagens
+        
             let tituloAba, tituloPagina;
 
             if (req.body.id == 0) {
@@ -142,7 +136,7 @@ const tarefasController = {
     },
 
 
-    // exclusão lógica: apenas marca status_tarefa = 0
+  
     excluirTarefa: async function (req, res) {
         const id = req.query.id;
 
